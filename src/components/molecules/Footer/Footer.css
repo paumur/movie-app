@@ -1,0 +1,21 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0px 23px;
+  position: absolute;
+  background: #222222;
+  bottom: 0;
+  position: absolute;
+  max-width: 1120px;
+  width: 100%;
+}
+
+.footer > * {
+  margin: 0 20px;
+}
+
+.footer .footer__copyright {
+  font-weight: 700;
+  font-size: 16px;
+}
