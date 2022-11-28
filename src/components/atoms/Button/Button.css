@@ -11,6 +11,12 @@ button {
   white-space: nowrap;
   text-align: center;
 }
+
+.card-content__button.card-content__button--favorite {
+  background: #222222;
+  border: 2px solid #e50914;
+}
+
 button:hover {
   border-color: #93060d;
 }

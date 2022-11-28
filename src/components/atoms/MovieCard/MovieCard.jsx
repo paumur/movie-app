@@ -16,8 +16,13 @@ export default class MovieCard extends Component {
           </div>
           <Button
             addToFavorite={this.props.addToFavorite}
+            cardId={this.props.id}
             padding='2px 20px 2px'
-            className='card-content__button'
+            className={
+              this.props.favorites.find((id) => id === this.props.id)
+                ? 'card-content__button card-content__button--favorite'
+                : 'card-content__button'
+            }
             textContent={
               this.props.favorites.find((id) => id === this.props.id)
                 ? 'Remove 💔'
