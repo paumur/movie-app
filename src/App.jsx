@@ -58,19 +58,17 @@ class App extends React.Component {
           {loading && <p>Loading...</p>}
           {error && <p>Whoops! Failed to Load!</p>}
           {data &&
-            data
-              .slice(0, 6)
-              .map((movie) => (
-                <MovieCard
-                  addToFavorite={this.handleChange}
-                  favorites={favorites}
-                  id={movie.id}
-                  image={movie.image}
-                  title={movie.title}
-                  description={movie.description}
-                  key={movie.id}
-                />
-              ))}
+            data.map((movie) => (
+              <MovieCard
+                addToFavorite={this.handleChange}
+                favorites={favorites}
+                id={movie.id}
+                image={movie.image}
+                title={movie.title}
+                description={movie.description}
+                key={movie.id}
+              />
+            ))}
         </main>
         <Footer />
       </div>
