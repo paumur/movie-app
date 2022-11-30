@@ -55,20 +55,22 @@ class App extends React.Component {
         <Header />
         <Hero />
         <main className='main'>
-          {loading && <p>Loading...</p>}
-          {error && <p>Whoops! Failed to Load!</p>}
-          {data &&
-            data.map((movie) => (
-              <MovieCard
-                addToFavorite={this.handleChange}
-                favorites={favorites}
-                id={movie.id}
-                image={movie.image}
-                title={movie.title}
-                description={movie.description}
-                key={movie.id}
-              />
-            ))}
+          <div class='cards-container'>
+            {loading && <p>Loading...</p>}
+            {error && <p>Whoops! Failed to Load!</p>}
+            {data &&
+              data.map((movie) => (
+                <MovieCard
+                  addToFavorite={this.handleChange}
+                  favorites={favorites}
+                  id={movie.id}
+                  image={movie.image}
+                  title={movie.title}
+                  description={movie.description}
+                  key={movie.id}
+                />
+              ))}
+          </div>
         </main>
         <Footer />
       </div>

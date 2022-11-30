@@ -6,10 +6,12 @@ export default class Footer extends Component {
   render() {
     return (
       <footer className='footer'>
-        <small className='footer__copyright'>
-          We care about your entertainment. Copyright © 2019–2022 felix.com
-        </small>
-        <CreditCardsIcon />
+        <div className='footer__content'>
+          <small className='footer__copyright'>
+            We care about your entertainment. Copyright © 2019–2022 felix.com
+          </small>
+          <CreditCardsIcon />
+        </div>
       </footer>
     );
   }

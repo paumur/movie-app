@@ -13,7 +13,7 @@ export default class Button extends Component {
         className={this.props.className}
         onClick={this.props.addToFavorite}
       >
-        {this.props.textContent}
+        {this.props.children}
       </button>
     );
   }

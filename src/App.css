@@ -1,15 +1,16 @@
 #root {
-  max-width: 1120px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   text-align: center;
 }
 
-.main {
+.cards-container {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 48px 55px;
-  align-items: stretch;
+  align-content: stretch;
   flex-wrap: wrap;
   gap: 40px;
   padding-bottom: 140px;

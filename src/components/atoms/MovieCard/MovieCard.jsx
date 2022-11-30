@@ -23,12 +23,11 @@ export default class MovieCard extends Component {
                 ? 'card-content__button card-content__button--favorite'
                 : 'card-content__button'
             }
-            textContent={
-              this.props.favorites.find((id) => id === this.props.id)
-                ? 'Remove 💔'
-                : 'Favorite'
-            }
-          ></Button>
+          >
+            {this.props.favorites.find((id) => id === this.props.id)
+              ? 'Remove 💔'
+              : 'Favorite'}
+          </Button>
         </div>
       </div>
     );

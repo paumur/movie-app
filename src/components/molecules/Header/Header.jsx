@@ -5,8 +5,10 @@ import './Header.css';
 
 const Header = () => (
   <header className='header'>
-    <LogoIcon />
-    <Button textContent='Sign In' />
+    <div className='header__content'>
+      <LogoIcon />
+      <Button>Sign In</Button>
+    </div>
   </header>
 );
 

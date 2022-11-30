@@ -1,14 +1,21 @@
 .footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 25px 0px 23px;
   position: absolute;
   background: #222222;
   bottom: 0;
   position: absolute;
-  max-width: 1120px;
   width: 100%;
+}
+
+.footer__content {
+  max-width: 1020px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer > * {

@@ -14,7 +14,7 @@ export default class Hero extends Component {
         className='hero'
       >
         <h2 className='hero__title'>Wanna more Content?</h2>
-        <Button textContent='Get Access' />
+        <Button>Get Access</Button>
         <div className='hero__line-break'></div>
       </div>
     );
