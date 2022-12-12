@@ -1,4 +1,5 @@
-button {
+button,
+a {
   border-radius: 4px;
   border: 2px solid transparent;
   padding: 7px 34px 7px;
@@ -10,6 +11,8 @@ button {
   transition: border-color 0.25s;
   white-space: nowrap;
   text-align: center;
+  text-decoration: none;
+  color: #fff;
 }
 
 .card-content__button.card-content__button--favorite {
@@ -17,10 +20,13 @@ button {
   border: 2px solid #e50914;
 }
 
-button:hover {
+button:hover,
+a:hover {
   border-color: #93060d;
 }
 button:focus,
-button:focus-visible {
+a:focus,
+button:focus-visible,
+a:focus-visible {
   outline: 4px auto #93060d;
 }

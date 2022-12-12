@@ -6,11 +6,23 @@ export default class MovieCard extends Component {
   render() {
     return (
       <div id={this.props.id} className='card'>
-        <img className='card__img' src={this.props.image}></img>
+        <img
+          className='card__img'
+          src={this.props.image}
+          onClick={this.props.selectable && this.props.handleSelect}
+        ></img>
         <div className='card-content'>
           <div>
-            <h3 className='card-content__title'>{this.props.title}</h3>
-            <p className='card-content__description'>
+            <h3
+              className='card-content__title'
+              onClick={this.props.selectable && this.props.handleSelect}
+            >
+              {this.props.title}
+            </h3>
+            <p
+              className='card-content__description'
+              onClick={this.props.selectable && this.props.handleSelect}
+            >
               {this.props.description}
             </p>
           </div>

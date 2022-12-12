@@ -1,0 +1,49 @@
+.App:has(.loginCard) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loginCard {
+  max-width: 672px;
+  padding: 5%;
+  width: 100%;
+  background-color: #c4c4c4;
+}
+
+.loginCard form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginCard form input {
+  background-color: #ffff;
+  color: #222222;
+  font-size: 24px;
+  border: none;
+  width: 100%;
+  height: 50px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.loginCard label {
+  margin-right: auto;
+  font-weight: 700;
+  color: #222222;
+  font-size: 18px;
+}
+
+.loginCard input[type='submit'] {
+  margin: auto;
+}
+
+.error {
+  color: #e50914;
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: auto;
+}
