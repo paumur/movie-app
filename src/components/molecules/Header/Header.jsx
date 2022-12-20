@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import LogoIcon from '../../../assets/icons/LogoIcon';
 import Button from '../../atoms/Button/Button';
 import './Header.css';
