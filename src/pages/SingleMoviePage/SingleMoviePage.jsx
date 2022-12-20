@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './SingleMoviePage.css';
 import Header from '../../components/molecules/Header/Header';
 import Hero from '../../components/molecules/Hero/Hero';
@@ -6,84 +6,80 @@ import Footer from '../../components/molecules/Footer/Footer';
 import SingleMovie from '../../components/atoms/SingleMovie/SingleMovie';
 import Modal from '../../components/atoms/Modal/Modal';
 
-class SingleMoviePage extends React.Component {
-  state = {
-    movieSelected: localStorage.getItem('movieSelected'),
-    token: localStorage.getItem('token'),
-    favorites: JSON.parse(localStorage.getItem('favorites')) || [],
-    movie: {},
-    openModal: false,
-    hasAccess: true,
-  };
+const SingleMoviePage = () => {
+  const [movieSelected, setMovieSelected] = useState(
+    localStorage.getItem('movieSelected')
+  );
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [favorites, setFavorites] =
+    useState(JSON.parse(localStorage.getItem('favorites'))) || [];
+  const [movie, setMovie] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+  const [hasAccess, setHasAccess] = useState(true);
 
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.openModal = this.openModal.bind(this);
-  }
-
-  handleChange(e) {
-    const cardId = e.currentTarget.closest('.single-movie').getAttribute('id');
-    this.state.favorites.find((id) => id === cardId)
-      ? this.setState({
-          favorites: this.state.favorites.filter((id) => id !== cardId),
-        })
-      : this.setState({ favorites: [...this.state.favorites, cardId] });
-  }
-
-  openModal() {
-    this.setState({ openModal: !this.state.openModal });
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     fetch(
-      `https://dummy-video-api.onrender.com/content/items/${this.state.movieSelected}`,
+      `https://dummy-video-api.onrender.com/content/items/${movieSelected}`,
       {
         method: 'GET',
         headers: {
           'Content-type': 'application/json',
           // prettier-ignore
-          'Authorization': this.state.token,
+          'Authorization': token,
         },
       }
     )
       .then((response) => response.json())
       .then((result) => {
         if (result.message === 'Access denied!') {
-          this.setState({ hasAccess: false });
+          setHasAccess(false);
         } else {
-          this.setState({ movie: result });
+          setMovie(result);
         }
       });
-  }
+  }, []);
 
-  render() {
-    const { movie, favorites, openModal, hasAccess } = this.state;
-    localStorage.setItem('favorites', JSON.stringify(this.state.favorites));
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
 
-    return (
-      <div className='App'>
-        <Header />
-        <Hero />
-        <main className='main' onClick={openModal ? this.openModal : null}>
-          {movie && (
-            <SingleMovie
-              favorites={favorites}
-              openModal={this.openModal}
-              addToFavorite={this.handleChange}
-              id={movie.id}
-              title={movie.title}
-              image={movie.image}
-              description={movie.description}
-            />
-          )}
-          <Modal open={openModal} src={movie.video} />
-          {!hasAccess && <Navigate to='/signin' />}
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-}
+  const handleChange = (e) => {
+    const card =
+      e.currentTarget.closest('.card') ||
+      e.currentTarget.closest('.single-movie');
+    const cardId = card.getAttribute('id');
+    favorites.find((id) => id === cardId)
+      ? setFavorites(favorites.filter((id) => id !== cardId))
+      : setFavorites([...favorites, cardId]);
+  };
+
+  const handleModal = (e) => {
+    if (e.target.tagName === 'BUTTON') setOpenModal(true);
+    if (openModal) setOpenModal(false);
+  };
+
+  return (
+    <div className='App'>
+      <Header />
+      <Hero />
+      <main className='main' onClick={handleModal}>
+        {movie && (
+          <SingleMovie
+            favorites={favorites}
+            openModal={handleModal}
+            addToFavorite={handleChange}
+            id={movie.id}
+            title={movie.title}
+            image={movie.image}
+            description={movie.description}
+          />
+        )}
+        <Modal open={openModal} src={movie.video} handleModal={handleModal} />
+        {!hasAccess && <Navigate to='/signin' />}
+      </main>
+      <Footer />
+    </div>
+  );
+};
 
 export default SingleMoviePage;

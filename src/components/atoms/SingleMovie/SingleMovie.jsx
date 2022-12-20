@@ -3,11 +3,12 @@ import Button from '../Button/Button';
 import './SingleMovie.css';
 
 const SingleMovie = (props) => {
-  const { id, image, title, description, openModal, addToFavorite } = props;
+  const { id, image, title, description, openModal, addToFavorite, favorites } =
+    props;
   return (
     <div id={id} className='single-movie'>
       <div className='single-movie__left'>
-        <img src={image}></img>
+        <img src={image} />
       </div>
       <div className='single-movie__right'>
         <h2 className='single-movie__title'>{title}</h2>
@@ -18,12 +19,14 @@ const SingleMovie = (props) => {
             padding='2px 20px 2px'
             addToFavorite={addToFavorite}
             className={
-              favorites.find((id) => id === id)
+              favorites.find((cardId) => cardId === id)
                 ? 'card-content__button card-content__button--favorite'
                 : 'card-content__button'
             }
           >
-            {favorites.find((id) => id === id) ? 'Remove 💔' : 'Favorite'}
+            {favorites.find((cardId) => cardId === id)
+              ? 'Remove 💔'
+              : 'Favorite'}
           </Button>
         </div>
       </div>
