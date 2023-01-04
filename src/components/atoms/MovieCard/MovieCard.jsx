@@ -3,52 +3,34 @@ import Button from '../Button/Button';
 import './MovieCard.css';
 
 export const MovieCard = (props) => {
-  const {
-    id,
-    image,
-    title,
-    selectable,
-    handleSelect,
-    description,
-    addToFavorite,
-    favorites,
-  } = props;
+  const { id, image, title, description, addToFavorite, inFavorites } = props;
 
   return (
-    <div id={id} className='card'>
-      <img
-        className='card__img'
-        src={image}
-        onClick={selectable && handleSelect}
-      ></img>
+    <div
+      id={id}
+      className='card'
+      tabIndex='0'
+      role='button'
+      aria-pressed='false'
+    >
+      <Button to={`/content/${id}`} className='navigator'>
+        <img className='card__img' src={image} />
+      </Button>
       <div className='card-content'>
-        <div>
-          <h3
-            className='card-content__title'
-            onClick={selectable && handleSelect}
-          >
-            {title}
-          </h3>
-          <p
-            className='card-content__description'
-            onClick={selectable && handleSelect}
-          >
-            {description}
-          </p>
-        </div>
+        <Button to={`/content/${id}`} className='navigator'>
+          <div>
+            <h3 className='card-content__title'>{title}</h3>
+            <p className='card-content__description'>{description}</p>
+          </div>
+        </Button>
         <Button
           addToFavorite={addToFavorite}
-          cardId={id}
           padding='2px 20px 2px'
           className={
-            favorites.find((favoritesId) => favoritesId === id)
-              ? 'card-content__button card-content__button--favorite'
-              : 'card-content__button'
+            inFavorites ? 'button  card-content__button--favorite' : 'button '
           }
         >
-          {favorites.find((favoritesId) => favoritesId === id)
-            ? 'Remove 💔'
-            : 'Favorite'}
+          {inFavorites ? 'Remove 💔' : 'Favorite'}
         </Button>
       </div>
     </div>

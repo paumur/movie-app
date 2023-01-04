@@ -1,12 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Button from '../Button/Button';
 import './SingleMovie.css';
 
 const SingleMovie = (props) => {
-  const { id, image, title, description, openModal, addToFavorite, favorites } =
-    props;
+  const { image, title, description, addToFavorite, inFavorites } = props;
+
   return (
-    <div id={id} className='single-movie'>
+    <div className='single-movie'>
       <div className='single-movie__left'>
         <img src={image} />
       </div>
@@ -14,19 +15,15 @@ const SingleMovie = (props) => {
         <h2 className='single-movie__title'>{title}</h2>
         <p className='single-movie__description'>{description}</p>
         <div className='single-movie__buttons'>
-          <Button openModal={openModal}>Watch</Button>
+          <Button>Watch</Button>
           <Button
-            padding='2px 20px 2px'
             addToFavorite={addToFavorite}
+            padding='2px 20px 2px'
             className={
-              favorites.find((cardId) => cardId === id)
-                ? 'card-content__button card-content__button--favorite'
-                : 'card-content__button'
+              inFavorites ? 'button  card-content__button--favorite' : 'button '
             }
           >
-            {favorites.find((cardId) => cardId === id)
-              ? 'Remove 💔'
-              : 'Favorite'}
+            {inFavorites ? 'Remove 💔' : 'Favorite'}
           </Button>
         </div>
       </div>
@@ -34,4 +31,10 @@ const SingleMovie = (props) => {
   );
 };
 
-export default SingleMovie;
+function mapStateToProps(state) {
+  return {
+    favorites: state.content.favorites || [],
+  };
+}
+
+export default connect(mapStateToProps)(SingleMovie);

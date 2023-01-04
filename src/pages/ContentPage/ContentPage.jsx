@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Header from '../../components/molecules/Header/Header';
 import Footer from '../../components/molecules/Footer/Footer';
 import MovieCard from '../../components/atoms/MovieCard/MovieCard';
-import { Navigate } from 'react-router-dom';
 
-const ContentPage = () => {
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem('favorites')) || []
-  );
+const ContentPage = ({
+  toggleFavorite,
+  favorites,
+  setMovies,
+  movies,
+  token,
+}) => {
   const [hasAccess, setHasAccess] = useState(true);
-  const [movies, setMovies] = useState([]);
-  const [movieSelected, setMovieSelected] = useState(null);
-
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('https://dummy-video-api.onrender.com/content/items', {
@@ -22,59 +21,66 @@ const ContentPage = () => {
       headers: {
         'Content-type': 'application/json',
         // prettier-ignore
-        'Authorization': localStorage.getItem('token'),
+        'Authorization': token,
       },
     })
       .then((response) => response.json())
       .then((result) => {
         if (result.some((movie) => movie.free === false)) {
           setMovies(result);
+          setLoading(false);
         } else {
           setHasAccess(false);
         }
       });
   }, []);
 
-  const handleChange = (e) => {
-    const cardId = e.currentTarget.closest('.card').getAttribute('id');
-    favorites.find((id) => id === cardId)
-      ? setFavorites(favorites.filter((id) => id !== cardId))
-      : setFavorites([...favorites, cardId]);
-  };
-
-  const handleSelect = (e) => {
-    const cardId = e.currentTarget.closest('.card').getAttribute('id');
-    setMovieSelected(cardId);
-  };
-
-  useEffect(() => {
-    localStorage.setItem('movieSelected', movieSelected);
-  }, [movieSelected]);
-
   return (
     <div className='App'>
       <Header />
       <div className='cards-container'>
-        {movies &&
-          movies.map((movie) => (
-            <MovieCard
-              selectable
-              handleSelect={handleSelect}
-              addToFavorite={handleChange}
-              favorites={favorites}
-              id={movie.id}
-              image={movie.image}
-              title={movie.title}
-              description={movie.description}
-              key={movie.id}
-            />
-          ))}
+        {loading && <p>Loading...</p>}
+        {movies.map((movie) => (
+          <MovieCard
+            addToFavorite={() =>
+              toggleFavorite(movie.id, favorites.includes(movie.id))
+            }
+            inFavorites={favorites.includes(movie.id)}
+            id={movie.id}
+            image={movie.image}
+            title={movie.title}
+            description={movie.description}
+            key={movie.id}
+          />
+        ))}
       </div>
       {!hasAccess && <Navigate to='/signin' />}
-      {movieSelected && <Navigate to={`/content/${movieSelected}`} />}
       <Footer />
     </div>
   );
 };
 
-export default ContentPage;
+function mapStateToProps(state) {
+  return {
+    favorites: state.content.favorites || [],
+    movies: state.content.movies || [],
+    token: state.auth.token,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    toggleFavorite: (id, isFavorite) => {
+      if (isFavorite) {
+        dispatch({ type: 'REMOVE_FAVORITE', id });
+      } else {
+        dispatch({ type: 'ADD_FAVORITE', id });
+      }
+    },
+    setMovies: (data) => {
+      dispatch({ type: 'SET_MOVIES', data });
+    },
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContentPage);

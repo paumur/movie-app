@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import './SigninPage.css';
 import LoginForm from '../../components/molecules/LoginForm/LoginForm';
 import { Navigate } from 'react-router-dom';
 
-const SigninPage = () => {
+const SigninPage = ({ setToken, token }) => {
   const [user, setUser] = useState({ username: '', password: '' });
-  const [token, setToken] = useState('');
   const [loggedin, setLoggedin] = useState();
 
   const handleChange = (e) => {
@@ -27,7 +27,6 @@ const SigninPage = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.token) {
-          localStorage.setItem('token', data.token);
           setLoggedin(true);
           setToken(data.token);
         } else {
@@ -51,4 +50,18 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+function mapStateToProps(state) {
+  return {
+    token: state.auth.token,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setToken: (token) => {
+      dispatch({ type: 'SET_TOKEN', token });
+    },
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SigninPage);
