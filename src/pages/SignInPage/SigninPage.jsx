@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import './SigninPage.css';
 import LoginForm from '../../components/molecules/LoginForm/LoginForm';
 import { Navigate } from 'react-router-dom';
+import auth from '../../auth';
 
-const SigninPage = ({ setToken, token }) => {
+const SigninPage = () => {
   const [user, setUser] = useState({ username: '', password: '' });
-  const [loggedin, setLoggedin] = useState();
+  // const [loggedin, setLoggedin] = useState();
+  const authState = useSelector(auth.selectors.auth);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -14,28 +16,8 @@ const SigninPage = ({ setToken, token }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('https://dummy-video-api.onrender.com/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        username: user.username,
-        password: user.password,
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
-          setLoggedin(true);
-          setToken(data.token);
-        } else {
-          setLoggedin(false);
-        }
-      })
-      .catch((err) => {
-        setLoggedin(false);
-      });
+    console.log(auth.actions.login);
+    auth.actions.login(user.username, user.password);
   };
 
   return (
@@ -43,25 +25,24 @@ const SigninPage = ({ setToken, token }) => {
       <LoginForm
         handleSubmit={handleSubmit}
         handleChange={handleChange}
-        loggedin={loggedin}
+        loggedin={authState.loggedIn}
       />
-      {loggedin && <Navigate to='/content' />}
+      {authState.loggedIn && <Navigate to='/content' />}
     </div>
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    token: state.auth.token,
-  };
-}
+// function mapStateToProps(state) {
+//   return {
+//     token: state.auth.token,
+//   };
+// }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setToken: (token) => {
-      dispatch({ type: 'SET_TOKEN', token });
-    },
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SigninPage);
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     setToken: (token) => {
+//       dispatch({ type: 'SET_TOKEN', token });
+//     },
+//   };
+// }
+export default SigninPage;

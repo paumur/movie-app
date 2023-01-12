@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   token: localStorage.getItem('token') || '',
+  loggedIn: null,
 };
 
 function reducer(state = INITIAL_STATE, action) {
@@ -9,6 +10,13 @@ function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         token: action.token,
+      };
+    }
+    case 'SET_LOGIN': {
+      console.log(action.payload);
+      return {
+        ...state,
+        loggedIn: false,
       };
     }
     default:

@@ -1,14 +1,19 @@
+import * as types from './types';
+import * as selectors from './selectors';
+
 const INITIAL_STATE = {
   favorites: JSON.parse(localStorage.getItem('favorites')) || [],
   movies: [],
   movieSelected: null,
+  loading: true,
+  error: false,
 };
 
 function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case 'REMOVE_FAVORITE': {
+    case types.REMOVE_FAVORITE: {
       const newArray = state.favorites.filter(
-        (movieId) => movieId !== action.id
+        (movieId) => movieId !== action.payload
       );
       localStorage.setItem('favorites', JSON.stringify(newArray));
       return {
@@ -17,25 +22,36 @@ function reducer(state = INITIAL_STATE, action) {
       };
     }
 
-    case 'ADD_FAVORITE': {
-      const newArray = state.favorites.concat(action.id);
+    case types.ADD_FAVORITE: {
+      const newArray = state.favorites.concat(action.payload);
       localStorage.setItem('favorites', JSON.stringify(newArray));
       return {
         ...state,
         favorites: newArray,
       };
     }
-    case 'SET_MOVIES': {
+    case types.SET_MOVIES: {
       return {
         ...state,
-        movies: action.data,
+        movies: action.payload,
       };
     }
-    case 'SELECTED_MOVIE': {
-      console.log(state);
+    case types.SELECTED_MOVIE: {
       return {
         ...state,
         movieSelected: action.movieSelected,
+      };
+    }
+    case types.LOADING: {
+      return {
+        ...state,
+        loading: !selectors.loading,
+      };
+    }
+    case types.ERROR: {
+      return {
+        ...state,
+        loading: !selectors.error,
       };
     }
     default:
