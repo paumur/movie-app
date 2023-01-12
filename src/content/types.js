@@ -4,3 +4,4 @@ export const SET_MOVIES = 'CONTENT.SET_MOVIES';
 export const SELECTED_MOVIE = 'CONTENT.SELECTED_MOVIE';
 export const LOADING = 'CONTENT.LOADING';
 export const ERROR = 'CONTENT.ERROR';
+export const HAS_ACCESS = 'HAS_ACCESS';

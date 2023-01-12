@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, Navigate } from 'react-router-dom';
 import './SingleMoviePage.css';
 import Header from '../../components/molecules/Header/Header';
@@ -7,11 +7,17 @@ import Hero from '../../components/molecules/Hero/Hero';
 import Footer from '../../components/molecules/Footer/Footer';
 import SingleMovie from '../../components/atoms/SingleMovie/SingleMovie';
 import Modal from '../../components/atoms/Modal/Modal';
+import content from '../../content';
+import * as contentSelector from '../../content/selectors';
+import * as authSelector from '../../auth/selectors';
 
-const SingleMoviePage = ({ token, favorites, toggleFavorite }) => {
+const SingleMoviePage = ({ token }) => {
   const [movie, setMovie] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [hasAccess, setHasAccess] = useState(true);
+  const contentState = useSelector(contentSelector.content);
+  const authState = useSelector(authSelector.auth);
+  const dispatch = useDispatch();
 
   const location = useLocation();
   const id = location.pathname.split('/')[2];
@@ -22,7 +28,7 @@ const SingleMoviePage = ({ token, favorites, toggleFavorite }) => {
       headers: {
         'Content-type': 'application/json',
         // prettier-ignore
-        'Authorization': token,
+        'Authorization': authState.token,
       },
     })
       .then((response) => response.json())
@@ -47,9 +53,9 @@ const SingleMoviePage = ({ token, favorites, toggleFavorite }) => {
       <main className='main' onClick={handleModal}>
         {movie && (
           <SingleMovie
-            inFavorites={favorites.includes(movie.id)}
+            inFavorites={contentState.favorites.includes(movie.id)}
             addToFavorite={() =>
-              toggleFavorite(movie.id, favorites.includes(movie.id))
+              dispatch(content.actions.addFavorite(movie.id))
             }
             title={movie.title}
             image={movie.image}
@@ -57,34 +63,11 @@ const SingleMoviePage = ({ token, favorites, toggleFavorite }) => {
           />
         )}
         <Modal open={openModal} src={movie.video} handleModal={handleModal} />
-        {!hasAccess && <Navigate to='/signin' />}
+        {!hasAccess && <Navigate to='/' />}
       </main>
       <Footer />
     </div>
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    favorites: state.content.favorites || [],
-    movies: state.content.movies || [],
-    token: state.auth.token,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    toggleFavorite: (id, isFavorite) => {
-      if (isFavorite) {
-        dispatch({ type: 'REMOVE_FAVORITE', id });
-      } else {
-        dispatch({ type: 'ADD_FAVORITE', id });
-      }
-    },
-    setMovies: (data) => {
-      dispatch({ type: 'SET_MOVIES', data });
-    },
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SingleMoviePage);
+export default SingleMoviePage;

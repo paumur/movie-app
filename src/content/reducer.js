@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   movieSelected: null,
   loading: true,
   error: false,
+  hasAccess: true,
 };
 
 function reducer(state = INITIAL_STATE, action) {
@@ -52,6 +53,12 @@ function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: !selectors.error,
+      };
+    }
+    case types.HAS_ACCESS: {
+      return {
+        ...state,
+        hasAccess: false,
       };
     }
     default:

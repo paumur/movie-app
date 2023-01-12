@@ -17,7 +17,35 @@ export const addFavorite = (id) => {
   };
 };
 
-export const setMovies = () => {
+export const setMovies = (token) => {
+  if (token) {
+    return (dispatch, getState) => {
+      fetch('https://dummy-video-api.onrender.com/content/items', {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json',
+          // prettier-ignore
+          'Authorization': token,
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.some((movie) => movie.free === false)) {
+            dispatch({
+              type: types.SET_MOVIES,
+              payload: result,
+            });
+            dispatch({
+              type: types.LOADING,
+            });
+          } else {
+            dispatch({
+              type: types.HAS_ACCESS,
+            });
+          }
+        });
+    };
+  }
   return (dispatch, getState) => {
     dispatch({
       type: types.LOADING,

@@ -1,51 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/molecules/Header/Header';
 import Footer from '../../components/molecules/Footer/Footer';
 import MovieCard from '../../components/atoms/MovieCard/MovieCard';
+import content from '../../content';
+import * as contentSelector from '../../content/selectors';
+import * as authSelector from '../../auth/selectors';
 
-const ContentPage = ({
-  toggleFavorite,
-  favorites,
-  setMovies,
-  movies,
-  token,
-}) => {
-  const [hasAccess, setHasAccess] = useState(true);
-  const [loading, setLoading] = useState(true);
+const ContentPage = () => {
+  const dispatch = useDispatch();
+  const contentState = useSelector(contentSelector.content);
+  const authState = useSelector(authSelector.auth);
 
   useEffect(() => {
-    fetch('https://dummy-video-api.onrender.com/content/items', {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        // prettier-ignore
-        'Authorization': token,
-      },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.some((movie) => movie.free === false)) {
-          setMovies(result);
-          setLoading(false);
-        } else {
-          setHasAccess(false);
-        }
-      });
+    dispatch(content.actions.setMovies(authState.token || true));
   }, []);
 
   return (
     <div className='App'>
       <Header />
       <div className='cards-container'>
-        {loading && <p>Loading...</p>}
-        {movies.map((movie) => (
+        {contentState.loading && <p>Loading...</p>}
+        {contentState.movies.map((movie) => (
           <MovieCard
             addToFavorite={() =>
-              toggleFavorite(movie.id, favorites.includes(movie.id))
+              dispatch(content.actions.addFavorite(movie.id))
             }
-            inFavorites={favorites.includes(movie.id)}
+            inFavorites={contentState.favorites.includes(movie.id)}
             id={movie.id}
             image={movie.image}
             title={movie.title}
@@ -54,33 +36,10 @@ const ContentPage = ({
           />
         ))}
       </div>
-      {!hasAccess && <Navigate to='/signin' />}
+      {!contentState.hasAccess && <Navigate to='/' />}
       <Footer />
     </div>
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    favorites: state.content.favorites || [],
-    movies: state.content.movies || [],
-    token: state.auth.token,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    toggleFavorite: (id, isFavorite) => {
-      if (isFavorite) {
-        dispatch({ type: 'REMOVE_FAVORITE', id });
-      } else {
-        dispatch({ type: 'ADD_FAVORITE', id });
-      }
-    },
-    setMovies: (data) => {
-      dispatch({ type: 'SET_MOVIES', data });
-    },
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContentPage);
+export default ContentPage;

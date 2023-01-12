@@ -1,22 +1,28 @@
 const INITIAL_STATE = {
   token: localStorage.getItem('token') || '',
   loggedIn: null,
+  error: false,
 };
 
 function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case 'SET_TOKEN': {
-      localStorage.setItem('token', action.token);
+      localStorage.setItem('token', action.payload);
       return {
         ...state,
-        token: action.token,
+        token: action.payload,
       };
     }
     case 'SET_LOGIN': {
-      console.log(action.payload);
       return {
         ...state,
-        loggedIn: false,
+        loggedIn: true,
+      };
+    }
+    case 'SET_ERROR': {
+      return {
+        ...state,
+        error: true,
       };
     }
     default:
